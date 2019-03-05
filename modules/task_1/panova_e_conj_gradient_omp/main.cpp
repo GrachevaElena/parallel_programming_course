@@ -29,10 +29,13 @@ class Vector {
             delete[] data;
         data = 0;
     }
-    int getSize() {
+    int getSize() const {
         return size;
     }
     double& operator[](int i) {
+        return data[i];
+    }
+    double get(int i) const {
         return data[i];
     }
     Vector& operator=(const Vector& v) {
@@ -118,7 +121,7 @@ class Matrix {
         Vector res(size);
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
-                res[i] += (*this)(i, j)*v[j];
+                res[i] += (*this)(i, j)*v.get(j);
         return res;
     }
 };
@@ -173,13 +176,14 @@ bool parseArgs(int argc, char* argv[], Matrix* A, Vector* b, double* eps) {
     return true;
 }
 
-void printRes(Vector& res, Matrix& A, Vector& b, Vector& r, int c, int& argc) {
+void printRes(const Vector& res, const Matrix& A, const Vector& b,
+    const Vector& r, int c, int argc) {
     std::cout << "Relative discrepancy is " <<
         r.Norm() / b.Norm() << "\n";
     std::cout << "Number of iterations is " << c << "\n";
     if (argc > 3) {
         for (int i = 0; i < res.getSize(); i++)
-            std::cout << res[i] << " ";
+            std::cout << res.get(i) << " ";
         std::cout << "\n";
     }
 }
