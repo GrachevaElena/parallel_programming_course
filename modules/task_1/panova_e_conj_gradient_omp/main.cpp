@@ -3,6 +3,9 @@
 #include <iostream>
 #include <random>
 
+const int N = 500;  // default matrix size 
+const double EPS = 1e-5;  // default error
+
 class Vector {
     int size = 0;
     double *data = 0;
@@ -157,12 +160,14 @@ Vector conjGradientMethod(const Matrix& A, const Vector& b, const Vector& x0,
 }
 
 bool parseArgs(int argc, char* argv[], Matrix* A, Vector* b, double* eps) {
+    int size = 0;
     if (argc < 3) {
-        std::cout << "wrong args\n";
-        return false;
+        size = N;
+        *eps = EPS;
+    } else {
+        size = atoi(argv[1]);
+        *eps = atof(argv[2]);
     }
-    int size = atoi(argv[1]);
-    *eps = atof(argv[2]);
     A->Initialize(size);
     b->Initialize(size);
     if (argc > 3) {  // read matrix and vector
@@ -189,6 +194,7 @@ bool parseArgs(int argc, char* argv[], Matrix* A, Vector* b, double* eps) {
 
 void printRes(const Vector& res, const Matrix& A, const Vector& b,
     const Vector& r, int c, int argc) {
+    std::cout << "Matrix size is " << b.getSize() << "\n";
     std::cout << "Relative discrepancy is " <<
         r.Norm() / b.Norm() << "\n";
     std::cout << "Number of iterations is " << c << "\n";
