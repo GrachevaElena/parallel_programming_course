@@ -1,5 +1,6 @@
 message(STATUS "Task 1")
 
+add_subdirectory(muravev_d_hoar_sort_simple_merge_omp)
 add_subdirectory(lalykin_o_radix_batcher_omp)
 add_subdirectory(kutovoi_v_rectangle_integr_omp)
 add_subdirectory(khomenko_a_shell_sort_w_simple_merge_omp)
@@ -12,3 +13,4 @@ add_subdirectory(grishin_a_crs_matrix_omp)
 add_subdirectory(vorobev_p_graham_alg_omp)
 add_subdirectory(kamelina_j_matrix_mul_ccs_omp)
 add_subdirectory(panova_e_conj_gradient_omp)
+add_subdirectory(romanov_a_multidim_mc_omp)
