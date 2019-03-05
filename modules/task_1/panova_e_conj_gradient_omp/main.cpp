@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 
-const int N = 500;  // default matrix size 
+const int N = 500;  // default matrix size
 const double EPS = 1e-5;  // default error
 
 class Vector {
