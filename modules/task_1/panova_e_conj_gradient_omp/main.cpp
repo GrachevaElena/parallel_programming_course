@@ -1,7 +1,6 @@
 // Copyright 2019 Panova Elena
 #include <omp.h>
 #include <iostream>
-#include <cmath>
 #include <random>
 
 class Vector {
@@ -13,10 +12,7 @@ class Vector {
         data = 0;
     }
     explicit Vector(int _size) {
-        size = _size;
-        data = new double[size];
-        for (int i = 0; i < size; i++)
-            data[i] = 0;
+        Initialize(_size);
     }
     Vector(const Vector& v) {
         size = v.size;
@@ -25,6 +21,16 @@ class Vector {
             data[i] = v.data[i];
     }
     ~Vector() {
+        Clear();
+    }
+    void Initialize(int _size) {
+        size = _size;
+        Clear();
+        data = new double[size];
+        for (int i = 0; i < size; i++)
+            data[i] = 0;
+    }
+    void Clear() {
         if (data)
             delete[] data;
         data = 0;
@@ -41,8 +47,7 @@ class Vector {
     Vector& operator=(const Vector& v) {
         if (this != &v) {
             if (v.size != size) {
-                if (data)
-                    delete[] data;
+                Clear();
                 data = new double[v.size];
                 size = v.size;
             }
@@ -75,8 +80,8 @@ class Vector {
     double Norm() const {
         double max = 0;
         for (int i = 0; i < size; i++)
-            if (max < abs(data[i]))
-                max = abs(data[i]);
+            if (max < std::abs(data[i]))
+                max = std::abs(data[i]);
         return max;
     }
 };
@@ -90,12 +95,19 @@ class Matrix {
         data = 0;
     }
     explicit Matrix(int _size) {
+        Initialize(_size);
+    }
+    ~Matrix() {
+        Clear();
+    }
+    void Initialize(int _size) {
         size = _size;
+        Clear();
         data = new double[size*size];
         for (int i = 0; i < size*size; i++)
             data[i] = 0;
     }
-    ~Matrix() {
+    void Clear() {
         if (data)
             delete[] data;
         data = 0;
@@ -103,8 +115,7 @@ class Matrix {
     Matrix& operator=(const Matrix& v) {
         if (this != &v) {
             if (v.size != size) {
-                if (data)
-                    delete[] data;
+                Clear();
                 data = new double[v.size*v.size];
                 size = v.size;
             }
@@ -152,8 +163,8 @@ bool parseArgs(int argc, char* argv[], Matrix* A, Vector* b, double* eps) {
     }
     int size = atoi(argv[1]);
     *eps = atof(argv[2]);
-    *A = Matrix(size);
-    *b = Vector(size);
+    A->Initialize(size);
+    b->Initialize(size);
     if (argc > 3) {  // read matrix and vector
         if (argc - 3 != size * size + size) {
             std::cout << "wrong args\n";
