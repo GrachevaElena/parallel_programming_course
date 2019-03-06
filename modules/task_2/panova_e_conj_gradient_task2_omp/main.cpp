@@ -10,7 +10,7 @@ class Vector {
     int size = 0;
     double *data = 0;
 
-public:
+ public:
     Vector() {
         data = 0;
     }
@@ -93,7 +93,7 @@ class Matrix {
     int size = 0;
     double *data = 0;
 
-public:
+ public:
     Matrix() {
         data = 0;
     }
@@ -166,8 +166,7 @@ bool parseArgs(int argc, char* argv[], Matrix* A, Vector* b, double* eps) {
     if (argc < NUM_ARGS_MIN) {
         size = N;
         *eps = EPS;
-    }
-    else {
+    } else {
         omp_set_num_threads(atoi(argv[1]));
         size = atoi(argv[2]);
         *eps = atof(argv[3]);
@@ -184,8 +183,7 @@ bool parseArgs(int argc, char* argv[], Matrix* A, Vector* b, double* eps) {
                 (*A)(i, j) = atof(argv[i*size + j + NUM_ARGS_MIN]);
         for (int i = 0; i < size; i++)
             (*b)[i] = atof(argv[size*size + i + NUM_ARGS_MIN]);
-    }
-    else {  // random matrix and vector
+    } else {  // random matrix and vector
         std::uniform_real_distribution<double> undist(0, 1);
         std::default_random_engine re;
         for (int i = 0; i < size; i++)
