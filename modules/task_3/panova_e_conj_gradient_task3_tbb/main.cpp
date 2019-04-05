@@ -6,10 +6,10 @@
 #include "tbb/parallel_for.h"
 #include "tbb/tick_count.h"
 
-const int N = 500;  // default matrix size
+const int N = 1024;  // default matrix size
 const double EPS = 1e-5;  // default error
 
-static int GRAIN_SIZE = N;
+static int GRAIN_SIZE = 32;
 static int NUM_THREADS = 0;
 
 class Vector {
@@ -147,18 +147,18 @@ class Matrix {
 };
 
 class LoopBodyFunctor {
-    const Matrix m;
-    const Vector v;
+    const Matrix* m;
+    const Vector* v;
     Vector* const res;
 
  public:
-    LoopBodyFunctor(const Matrix& _m, const Vector& _v, Vector* _res) :
+    LoopBodyFunctor(const Matrix* _m, const Vector* _v, Vector* _res) :
         m(_m), v(_v), res(_res) {}
 
     double dot(int i) const {
         double r = 0;
-        for (int j = 0; j < v.getSize(); j++)
-            r += m(i, j)*v.get(j);
+        for (int j = 0; j < v->getSize(); j++)
+            r += (*m)(i, j)*v->get(j);
         return r;
     }
 
@@ -171,7 +171,7 @@ class LoopBodyFunctor {
 Vector Matrix::operator*(const Vector& v) const {
     Vector res(size);
     tbb::parallel_for(tbb::blocked_range<int>(0, size, GRAIN_SIZE),
-        LoopBodyFunctor(*this, v, &res));
+        LoopBodyFunctor(this, &v, &res));
     return res;
 }
 
